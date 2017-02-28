@@ -1,5 +1,6 @@
 secret_settings.py
 run.sh
+presubmit.sh
 *.pyc
 *.sqlite3
 __pycache__
