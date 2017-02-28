@@ -1,0 +1,7 @@
+secret_settings.py
+run.sh
+*.pyc
+*.sqlite3
+__pycache__
+*.crx
+*.pem
