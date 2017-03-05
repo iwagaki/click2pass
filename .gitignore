@@ -1,6 +1,7 @@
 secret_settings.py
 run.sh
 presubmit.sh
+migrations
 *.pyc
 *.sqlite3
 __pycache__
