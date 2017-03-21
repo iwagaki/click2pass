@@ -1,6 +1,6 @@
 {
   "name": "click2pass client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
 
   "options_page": "options.html",
@@ -11,7 +11,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["md5.js", "mt.js", "main.js"],
+      "js": ["external/md5.js", "external/mt.js", "main.js"],
       "run_at": "document_end"
     }
   ]
