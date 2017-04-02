@@ -34,7 +34,6 @@ def add_bookmark(request):
 def update_bookmark(request, objid):
     bookmark_set = Bookmark.objects.filter(id = objid)
     bookmark = bookmark_set[0]
-
     bookmark.update(request)
     bookmark.save()
   

@@ -49,6 +49,47 @@ function generatePassword(obj) {
 }
 
 
+function generateUsername(obj) {
+  var id_string = obj.id;
+  var id = id_string.substr('username'.length);
+  var seed = document.getElementById('org_url' + id).value + master_pwd + document.getElementById('username_version' + id).value
+  console.log(seed);
+  var md5 = CybozuLabs.MD5.calc(seed);
+
+  var mt = new MersenneTwister();
+  var rndseed = parseInt(md5.substr(0, 3), 16)
+  console.log(rndseed);
+  mt.setSeed(rndseed);
+  console.log(md5);
+
+  var has_username = document.getElementById('has_username' + id).checked;
+  console.log(has_username);
+  if (!has_username)
+      return;
+
+  var length = document.getElementById('username_length' + id).value;
+  var has_number = document.getElementById('username_has_number' + id).checked;
+  var has_lowercase = document.getElementById('username_has_lowercase' + id).checked;
+
+  var charset = "";
+  if (has_number) {
+      charset += "0123456789";
+  }
+  if (has_lowercase) {
+      charset += "abcdefghijklnopqrstuvwxyz";
+  }
+
+  var retVal = "";
+  for (var i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(mt.nextInt(0, n));
+  }
+  console.log(retVal);
+
+  obj.value = retVal;
+  obj.select();
+}
+
+
 var optionIds = ['master_pwd'];
 
 chrome.storage.sync.get(optionIds, function(items) {
@@ -63,4 +104,17 @@ chrome.storage.sync.get(optionIds, function(items) {
       }, false);
     })();
   }
+
+  username_elements = document.getElementsByClassName('username');
+
+  for (var i = 0; i < username_elements.length; ++i) {
+    (function(){
+      var obj = username_elements[i];
+      username_elements[i].addEventListener('click', function(e){
+        generateUsername(obj);
+      }, false);
+    })();
+  }
+
+
 });

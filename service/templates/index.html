@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <title>Click2Pass</title>
 
     <!-- script type="text/javascript" src="/static/md5.js"></script> -->
     <!-- script type="text/javascript" src="/static/mt.js"></script> -->
     <!-- script type="text/javascript" src="/static/main.js"></script> -->
-    
+
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <style type="text/css">
       body {
@@ -23,44 +23,22 @@
 
 <script>
 
-function add_bookmark() {
-    title = document.getElementById('new_title').value;
-    url = document.getElementById('new_url').value;
-    username = document.getElementById('new_username').value;
-    version = document.getElementById('new_version').value;
-    length = document.getElementById('new_length').value;
-    has_number = document.getElementById('new_has_number').checked == true ? 1 : 0;
-    has_lowercase = document.getElementById('new_has_lowercase').checked == true ? 1 : 0;
-    has_uppercase = document.getElementById('new_has_uppercase').checked == true ? 1 : 0;
-    has_symbol = document.getElementById('new_has_symbol').checked == true ? 1 : 0;
+function add_or_update_bookmark(bookmark_objid) {
+    if (!bookmark_objid) {
+      bookmark_objid = ""
+    }
 
-    $.ajax({
-        url: 'add_bookmark/',
-        type: 'get',
-        data: {
-            'title': title,
-            'url': url,
-            'username': username,
-            'version': version,
-            'length': length,
-            'has_number': has_number,
-            'has_lowercase': has_lowercase,
-            'has_uppercase': has_uppercase,
-            'has_symbol': has_symbol
-        },
-        success: function(data) {
-            location.reload(true);
-        },
-        failure: function(data) { 
-            alert(data);
-        }
-    }); 
-}
-
-function update_bookmark(bookmark_objid) {
     title = document.getElementById('title' + bookmark_objid).value;
     url = document.getElementById('url' + bookmark_objid).value;
+    email = document.getElementById('email' + bookmark_objid).value;
+
+    has_username = document.getElementById('has_username' + bookmark_objid).value;
+    username_version = document.getElementById('username_version' + bookmark_objid).value;
+    username_length = document.getElementById('username_length' + bookmark_objid).value;
+    username_has_number = document.getElementById('username_has_number' + bookmark_objid).checked == true ? 1 : 0;
+    username_has_lowercase = document.getElementById('username_has_lowercase' + bookmark_objid).checked == true ? 1 : 0;
     username = document.getElementById('username' + bookmark_objid).value;
+
     version = document.getElementById('version' + bookmark_objid).value;
     length = document.getElementById('length' + bookmark_objid).value;
     has_number = document.getElementById('has_number' + bookmark_objid).checked == true ? 1 : 0;
@@ -68,29 +46,42 @@ function update_bookmark(bookmark_objid) {
     has_uppercase = document.getElementById('has_uppercase' + bookmark_objid).checked == true ? 1 : 0;
     has_symbol = document.getElementById('has_symbol' + bookmark_objid).checked == true ? 1 : 0;
 
-    option = bookmark_objid + '/'
+    note = document.getElementById('note' + bookmark_objid).value;
+
+    if (bookmark_objid == "") {
+        urlpattern = "add_bookmark/";
+    } else {
+        urlpattern = "update_bookmark/" + bookmark_objid + "/";
+    }
 
     $.ajax({
-        url: 'update_bookmark/' + option,
+        url: urlpattern,
         type: 'get',
         data: {
             'title': title,
             'url': url,
+            'email': email,
+            'has_username': has_username,
+            'username_version': username_version,
+            'username_length': username_length,
+            'username_has_number': username_has_number,
+            'username_has_lowercase': username_has_lowercase,
             'username': username,
             'version': version,
             'length': length,
             'has_number': has_number,
             'has_lowercase': has_lowercase,
             'has_uppercase': has_uppercase,
-            'has_symbol': has_symbol
+            'has_symbol': has_symbol,
+            'note': note
         },
         success: function(data) {
             location.reload();
         },
-        failure: function(data) { 
+        failure: function(data) {
             alert(data);
         }
-    }); 
+    });
 }
 
 function delete_bookmark(bookmark_objid) {
@@ -100,10 +91,10 @@ function delete_bookmark(bookmark_objid) {
         success: function(data) {
             location.reload();
         },
-        failure: function(data) { 
+        failure: function(data) {
             alert(data);
         }
-    }); 
+    });
 }
 
 </script>
@@ -130,43 +121,75 @@ function delete_bookmark(bookmark_objid) {
 <table class="table table-condensed">
   <thead>
     <tr>
-      <th style="display:table-cell;vertical-align:middle;width:300px;">Title</th>
-      <th style="display:table-cell;vertical-align:middle;width:150px;">URL</th>
-      <th style="display:table-cell;vertical-align:middle;width:150px;">Username</th>
-      <th style="display:table-cell;vertical-align:middle;width:40px;">Ver</th>
-      <th style="display:table-cell;vertical-align:middle;width:40px;">Len</th>
+      <th style="display:table-cell;vertical-align:middle;width:200px;">Title</th>
+      <th style="display:table-cell;vertical-align:middle;width:100px;">URL</th>
+      <th style="display:table-cell;vertical-align:middle;width:100px;">email</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">Gen</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">UVer</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">ULen</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">1</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">a</th>
+      <th style="display:table-cell;vertical-align:middle;width:100px;">Username</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">PVer</th>
+      <th style="display:table-cell;vertical-align:middle;width:30px;">PLen</th>
       <th style="display:table-cell;vertical-align:middle;width:30px;">1</th>
       <th style="display:table-cell;vertical-align:middle;width:30px;">a</th>
       <th style="display:table-cell;vertical-align:middle;width:30px;">A</th>
       <th style="display:table-cell;vertical-align:middle;width:30px;">$</th>
-      <th style="display:table-cell;vertical-align:middle;width:150px;">Password</th>
+      <th style="display:table-cell;vertical-align:middle;width:100px;">Password</th>
+      <th style="display:table-cell;vertical-align:middle;width:100px;">Note</th>
       <th style="display:table-cell;vertical-align:middle;width:50px;"></th>
       <th style="display:table-cell;vertical-align:middle;width:50px;"></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" id="new_title" style="width:300px;" placeholder="Title" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" id="new_url" style="width:150px;" placeholder="URL" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" id="new_username" style="width:150px;" placeholder="username" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" id="new_version" style="width:40px;" value="1"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" id="new_length"  style="width:40px;" value="24"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="new_has_number" checked></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="new_has_lowercase" checked></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="new_has_uppercase" checked></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="new_has_symbol"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="title" style="width:200px;" placeholder="Title" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="url" style="width:100px;" placeholder="URL" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="email" style="width:100px;" placeholder="email" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_username"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="username_version" style="width:30px;" value="1"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="username_length"  style="width:30px;" value="8"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="username_has_number" checked></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="username_has_lowercase" checked></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="username" style="width:100px;" placeholder="username" onkeydown="if (event.keyCode == 13) { add_bookmark(); }"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="version" style="width:30px;" value="1"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="length"  style="width:30px;" value="24"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_number" checked></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_lowercase" checked></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_uppercase" checked></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_symbol"></td>
       <td style="display:table-cell;vertical-align:middle"></td>
-      <td style="text-align:left;vertical-align:middle" ><button type="button" class="btn btn-primary btn-xs" onclick="add_bookmark();"><span class="glyphicon glyphicon-plus"></span></button></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" id="note"  style="width:100px;"></td>
+      <td style="text-align:left;vertical-align:middle" ><button type="button" class="btn btn-primary btn-xs" onclick="add_or_update_bookmark();"><span class="glyphicon glyphicon-plus"></span></button></td>
       <td style="display:table-cell;vertical-align:middle"></td>
     </tr>
 {% if bookmark_list %}
     {% for bookmark in bookmark_list %}
     <tr>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.title }}" id="title{{ bookmark.id }}" style="width:300px;"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.url }}" id="url{{ bookmark.id }}" style="width:150px;"><input type="hidden" value="{{ bookmark.org_url }}" id="org_url{{ bookmark.id }}"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.username }}" id="username{{ bookmark.id }}" style="width:150px;"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.version }}" id="version{{ bookmark.id }}" style="width:40px;"></td>
-      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.length }}" id="length{{ bookmark.id }}" style="width:40px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.title }}" id="title{{ bookmark.id }}" style="width:200px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.url }}" id="url{{ bookmark.id }}" style="width:100px;"><input type="hidden" value="{{ bookmark.org_url }}" id="org_url{{ bookmark.id }}"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.email }}" id="email{{ bookmark.id }}" style="width:100px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_username{{ bookmark.id }}"
+{% if bookmark.has_username %}
+checked
+{% endif %}
+      ></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.username_version }}" id="username_version{{ bookmark.id }}" style="width:30px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.username_length }}" id="username_length{{ bookmark.id }}" style="width:30px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="username_has_number{{ bookmark.id }}"
+{% if bookmark.username_has_number %}
+checked
+{% endif %}
+      ></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="username_has_lowercase{{ bookmark.id }}"
+{% if bookmark.username_has_lowercase %}
+checked
+{% endif %}
+      ></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.username }}" class="username" id="username{{ bookmark.id }}" style="width:100px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.version }}" id="version{{ bookmark.id }}" style="width:30px;"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.length }}" id="length{{ bookmark.id }}" style="width:30px;"></td>
       <td style="display:table-cell;vertical-align:middle"><input type="checkbox" id="has_number{{ bookmark.id }}"
 {% if bookmark.has_number %}
 checked
@@ -188,8 +211,9 @@ checked
 {% endif %}
       ></td>
       <!-- td style="display:table-cell;vertical-align:middle"><input type="text" placeholder="Password" style="width:290px;" id="passwd{{ bookmark.id }}" onclick="generatePassword(this, {{ bookmark.id }});"></td> -->
-      <td style="display:table-cell;vertical-align:middle"><input type="text" placeholder="Password" style="width:150px;" class="passwd" id="passwd{{ bookmark.id }}"></td>
-      <td style="text-align:left;vertical-align:middle" ><button type="button" class="btn btn-primary btn-xs" onclick="update_bookmark({{ bookmark.id }});"><span class="glyphicon glyphicon-refresh"></span></button></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" placeholder="Password" style="width:100px;" class="passwd" id="passwd{{ bookmark.id }}"></td>
+      <td style="display:table-cell;vertical-align:middle"><input type="text" value="{{ bookmark.note }}" id="note{{ bookmark.id }}" style="width:100px;"></td>
+      <td style="text-align:left;vertical-align:middle" ><button type="button" class="btn btn-primary btn-xs" onclick="add_or_update_bookmark({{ bookmark.id }});"><span class="glyphicon glyphicon-refresh"></span></button></td>
       <td style="text-align:left;vertical-align:middle" ><button type="button" class="btn btn-primary btn-xs" onclick="delete_bookmark({{ bookmark.id }});"><span class="glyphicon glyphicon-trash"></span></button></td>
     </tr>
     {% endfor %}
